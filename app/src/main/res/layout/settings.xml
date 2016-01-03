@@ -2,11 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
 
+    <com.llz.childrennoisedetect.widgets.YSBNavigationBar
+        android:id="@+id/nav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </com.llz.childrennoisedetect.widgets.YSBNavigationBar>
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp">
+        android:layout_height="48dp"
+        android:paddingLeft="5dp"
+        >
         <TextView
             android:id="@+id/setting_tv_volume_adjust_title"
             android:layout_width="wrap_content"
@@ -17,8 +26,8 @@
             />
         <Button
             android:id="@+id/setting_btn_plus"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
             android:layout_marginRight="10dp"
             android:background="@mipmap/plus_24"
             android:layout_alignParentRight="true"
@@ -26,18 +35,20 @@
             />
         <EditText
             android:id="@+id/setting_et_volume"
-            android:layout_width="wrap_content"
+            android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:padding="5dp"
             android:text="55.0"
             android:gravity="center"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@id/setting_btn_plus"
+            android:inputType="numberDecimal"
+            android:background="@null"
             />
         <Button
             android:id="@+id/setting_btn_delete"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
             android:background="@mipmap/sign_delete_24"
             android:layout_toLeftOf="@id/setting_et_volume"
             android:layout_centerVertical="true"
@@ -45,19 +56,21 @@
     </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp">
+        android:layout_height="48dp"
+        android:paddingLeft="5dp"
+        >
         <TextView
             android:id="@+id/setting_tv_time_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="定制哭声持续时间,默认2s"
+            android:text="定制哭声持续时间,\n默认2s"
             android:gravity="center_vertical"
             android:layout_centerVertical="true"
             android:textSize="18sp"
             />
         <EditText
             android:id="@+id/setting_et_time"
-            android:layout_width="40dp"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
@@ -66,12 +79,15 @@
             android:text="2"
             android:textSize="18sp"
             android:layout_marginRight="10dp"
+            android:background="@null"
             />
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp">
+        android:layout_height="48dp"
+        android:paddingLeft="5dp"
+        >
         <TextView
             android:id="@+id/setting_tv_phone_title"
             android:layout_width="wrap_content"
@@ -92,6 +108,7 @@
             android:text="18933948952"
             android:textSize="18sp"
             android:layout_marginRight="10dp"
+            android:background="@null"
             />
     </RelativeLayout>
 

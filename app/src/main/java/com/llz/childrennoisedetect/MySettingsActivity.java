@@ -9,6 +9,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.llz.childrennoisedetect.config.AppConfig;
+import com.llz.childrennoisedetect.widgets.YSBNavigationBar;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -42,6 +43,13 @@ public class MySettingsActivity extends Activity {
     }
 
     private void setViews() {
+        holder.nav.setTitle("设置");
+        holder.nav.setLeftListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MySettingsActivity.this.finish();
+            }
+        });
         /**
          * 音量阈值调节
          */
@@ -90,7 +98,6 @@ public class MySettingsActivity extends Activity {
             }
         });
 
-
     }
 
     @Override
@@ -107,8 +114,7 @@ public class MySettingsActivity extends Activity {
         String volume = holder.settingEtVolume.getText().toString();
         AppConfig.setUserDefault(AppConfig.flag_volume_threshold, Integer.parseInt(volume));
         String phone = holder.settingEtPhone.getText().toString();
-        if(!phone.equals("18933948952"))
-        {
+        if (!phone.equals("18933948952")) {
             AppConfig.setUserDefault(AppConfig.flag_phone, phone);
         }
 
@@ -126,13 +132,9 @@ public class MySettingsActivity extends Activity {
     }
 
 
-    /**
-     * This class contains all butterknife-injected Views & Layouts from layout file 'settings.xml'
-     * for easy to all layout elements.
-     *
-     * @author ButterKnifeZelezny, plugin for Android Studio by Avast Developers (http://github.com/avast)
-     */
     static class ViewHolder {
+        @Bind(R.id.nav)
+        YSBNavigationBar nav;
         @Bind(R.id.setting_tv_volume_adjust_title)
         TextView settingTvVolumeAdjustTitle;
         @Bind(R.id.setting_btn_plus)
@@ -154,4 +156,6 @@ public class MySettingsActivity extends Activity {
             ButterKnife.bind(this, view);
         }
     }
+
+
 }
