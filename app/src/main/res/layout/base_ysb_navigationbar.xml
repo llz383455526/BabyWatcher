@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/navigationBar_height"
+    android:background="@color/BG4"
+    android:orientation="horizontal"
+    android:gravity="center_vertical">
+    <!--  左 -->
+    <LinearLayout
+        android:id="@+id/llNavLeft"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/ivNavLeft"
+            android:layout_width="80dp"
+            android:layout_height="34dp"
+            android:layout_gravity="center_vertical"
+            android:src="@mipmap/header_back_button"
+            android:scaleType="centerInside"
+            android:background="#00ffffff"/>
+    </LinearLayout>
+
+    <!--  中 -->
+    <LinearLayout
+        android:id="@+id/llNavMiddle"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/tvNavMiddle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:textSize="22sp"
+            android:textColor="@android:color/white"/>
+    </LinearLayout>
+
+    <!--  右 -->
+    <LinearLayout
+        android:id="@+id/llNavRight"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:layout_marginRight="5dp"
+        android:gravity="right"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/tvNavRight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="6dp"
+            android:textSize="16sp"
+            android:textColor="@android:color/white"/>
+        <ImageView
+            android:id="@+id/ivNavRight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="6dp"/>
+    </LinearLayout>
+
+</LinearLayout>

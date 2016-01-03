@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <!-- ########################## 专业版约定配色表 begin ######################### -->
+    <!-- Text -->
+    <color name="T1">#2f3132</color>
+    <color name="T2">#565a5c</color>
+    <color name="T3">#7c7c7d</color>
+    <color name="T4">#fd5c02</color>
+    <color name="T5">#fc894b</color>
+    <!-- background -->
+    <color name="BG1">#7c7c7d</color>
+    <color name="BG2">#e1e2e1</color>
+    <color name="BG3">#f5f6f5</color>
+    <color name="BG4">#fd5c02</color>
+    <color name="BG5">#fc894b</color>
+    <!-- button -->
+    <color name="BT1">#aaaaaa</color>
+    <color name="BT2">#fc894b</color>
+    <color name="BT3">#fd5c02</color>
+    <!-- line -->
+    <color name="L1">#e1e2e1</color>
+    <color name="L2">#fd5c02</color>
+    <color name="L3">#e4e5e4</color>
+    <!-- ######################## 专业版约定配色表 end ########################## -->
+</resources>
+
