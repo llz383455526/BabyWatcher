@@ -31,6 +31,7 @@ public class MySettingsActivity extends Activity {
 
         ButterKnife.bind(this);
 
+        //读sp
         holder = new ViewHolder(this);
         volumeThreshold = AppConfig.getUserDefault(AppConfig.flag_volume_threshold, int.class);
         volumeContinueTime = AppConfig.getUserDefault(AppConfig.flag_volume_continue_time, int.class);
@@ -109,14 +110,14 @@ public class MySettingsActivity extends Activity {
     protected void onPause() {
         super.onPause();
 
+
+        //退出设置时，将设置内容存入sp
         String time = holder.settingEtTime.getText().toString();
         AppConfig.setUserDefault(AppConfig.flag_volume_continue_time, Integer.parseInt(time));
         String volume = holder.settingEtVolume.getText().toString();
         AppConfig.setUserDefault(AppConfig.flag_volume_threshold, Integer.parseInt(volume));
         String phone = holder.settingEtPhone.getText().toString();
-        if (!phone.equals("18933948952")) {
-            AppConfig.setUserDefault(AppConfig.flag_phone, phone);
-        }
+        AppConfig.setUserDefault(AppConfig.flag_phone, phone);
 
 
     }

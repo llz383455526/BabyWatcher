@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private YSBNavigationBar navigationBar;
     private int volumeThreshold;
     private int volumeContinueTime;
+    private String phone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,32 +134,38 @@ public class MainActivity extends AppCompatActivity {
 
 
         AudioRecordHandler(MainActivity activity){
-            weakContext = new WeakReference<MainActivity>(activity);
+            weakContext = new WeakReference<>(activity);
         }
 
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+            MainActivity activity=null;
+            if(weakContext!=null)
+            {
+                activity = weakContext.get();
+            }
+
             switch (msg.what)
             {
                 case 1:
                     float volume = Float.parseFloat(msg.obj.toString());
-                    weakContext.get().tvVolume.setText(volume + "");
+                    activity.tvVolume.setText(volume + "");
                     if(((int)volume)>weakContext.get().volumeThreshold)
                     {
-                        weakContext.get().NoiseCount++;
+                        activity.NoiseCount++;
                         //哭声持续超过2s
-                        if(weakContext.get().NoiseCount>=weakContext.get().volumeContinueTime*10)
+                        if(activity.NoiseCount>=activity.volumeContinueTime*10)
                         {
 
-                            weakContext.get().stopAudio();
-                            weakContext.get().NoiseCount = 0;
+                            activity.stopAudio();
+                            activity.NoiseCount = 0;
 
                             //直接拨打电话
-                            Uri uri = Uri.parse("tel:" + "15978514247");
+                            Uri uri = Uri.parse("tel:" +activity.phone);
                             Intent call = new Intent(Intent.ACTION_CALL, uri); //直接播出电话
                             try {
-                                weakContext.get().startActivity(call);
+                                activity.startActivity(call);
                             }catch (Exception e){
                                 e.printStackTrace();
                             }
@@ -229,6 +236,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         volumeThreshold = AppConfig.getUserDefault(AppConfig.flag_volume_threshold,int.class);
         volumeContinueTime = AppConfig.getUserDefault(AppConfig.flag_volume_continue_time,int.class);
+        phone = AppConfig.getUserDefault(AppConfig.flag_phone,String.class);
 
         Log.d("llz","shold="+volumeThreshold+":time="+volumeContinueTime);
 
