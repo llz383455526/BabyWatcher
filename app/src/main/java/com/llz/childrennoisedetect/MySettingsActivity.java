@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,8 +38,15 @@ public class MySettingsActivity extends Activity {
         volumeContinueTime = AppConfig.getUserDefault(AppConfig.flag_volume_continue_time, int.class);
         phone = AppConfig.getUserDefault(AppConfig.flag_phone, String.class);
 
+
+        holder.settingNpVolume.setMinValue(40);
+        holder.settingNpVolume.setMaxValue(90);
+        holder.settingNpVolume.setWrapSelectorWheel(false);
+        holder.settingNpVolume.setValue(volumeThreshold);
+        holder.settingTvVolumeAdjustTitle.setText("拨动滚轮调节声音响应阈值 ("+volumeThreshold+" s)");
+
         holder.settingEtTime.setText(volumeContinueTime + "");
-        holder.settingEtVolume.setText(volumeThreshold + "");
+//        holder.settingEtVolume.setText(volumeThreshold + "");
         holder.settingEtPhone.setText(phone);
         setViews();
     }
@@ -65,6 +73,13 @@ public class MySettingsActivity extends Activity {
                     AppConfig.setUserDefault(AppConfig.flag_volume_threshold, volumeThreshold);
                 }
 
+            }
+        });
+
+        holder.settingNpVolume.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                holder.settingTvVolumeAdjustTitle.setText("拨动滚轮调节声音响应阈值 ("+newVal+" s)");
             }
         });
 
@@ -114,8 +129,9 @@ public class MySettingsActivity extends Activity {
         //退出设置时，将设置内容存入sp
         String time = holder.settingEtTime.getText().toString();
         AppConfig.setUserDefault(AppConfig.flag_volume_continue_time, Integer.parseInt(time));
-        String volume = holder.settingEtVolume.getText().toString();
-        AppConfig.setUserDefault(AppConfig.flag_volume_threshold, Integer.parseInt(volume));
+//        String volume = holder.settingEtVolume.getText().toString();
+        int volume = holder.settingNpVolume.getValue();
+        AppConfig.setUserDefault(AppConfig.flag_volume_threshold, volume);
         String phone = holder.settingEtPhone.getText().toString();
         AppConfig.setUserDefault(AppConfig.flag_phone, phone);
 
@@ -152,6 +168,8 @@ public class MySettingsActivity extends Activity {
         TextView settingTvPhoneTitle;
         @Bind(R.id.setting_et_phone)
         EditText settingEtPhone;
+        @Bind(R.id.setting_np_volume)
+        NumberPicker settingNpVolume;
 
         ViewHolder(Activity view) {
             ButterKnife.bind(this, view);
