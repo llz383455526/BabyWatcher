@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
                 MainActivity.this.startActivity(intent);
             }
         });
-        navigationBar.setTitle("婴儿监护专家");
+        navigationBar.setTitle(getResources().getString(R.string.app_name));
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

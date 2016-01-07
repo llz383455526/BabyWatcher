@@ -40,10 +40,10 @@ public class MySettingsActivity extends Activity {
 
 
         holder.settingNpVolume.setMinValue(40);
-        holder.settingNpVolume.setMaxValue(90);
+        holder.settingNpVolume.setMaxValue(75);
         holder.settingNpVolume.setWrapSelectorWheel(false);
         holder.settingNpVolume.setValue(volumeThreshold);
-        holder.settingTvVolumeAdjustTitle.setText("拨动滚轮调节声音响应阈值 ("+volumeThreshold+" s)");
+        holder.settingTvVolumeAdjustTitle.setText("拨动滚轮调节声音响应阈值 "+volumeThreshold+" dB");
 
         holder.settingEtTime.setText(volumeContinueTime + "");
 //        holder.settingEtVolume.setText(volumeThreshold + "");
@@ -79,7 +79,7 @@ public class MySettingsActivity extends Activity {
         holder.settingNpVolume.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                holder.settingTvVolumeAdjustTitle.setText("拨动滚轮调节声音响应阈值 ("+newVal+" s)");
+                holder.settingTvVolumeAdjustTitle.setText("拨动滚轮调节声音响应阈值 ("+newVal+" dB)");
             }
         });
 
@@ -104,15 +104,7 @@ public class MySettingsActivity extends Activity {
             }
         });
 
-        /**
-         * 声音持续时间调节
-         */
-        holder.settingEtTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                holder.settingEtTime.setText("");
-            }
-        });
+
 
     }
 
@@ -127,9 +119,12 @@ public class MySettingsActivity extends Activity {
 
 
         //退出设置时，将设置内容存入sp
+
         String time = holder.settingEtTime.getText().toString();
-        AppConfig.setUserDefault(AppConfig.flag_volume_continue_time, Integer.parseInt(time));
-//        String volume = holder.settingEtVolume.getText().toString();
+        if(time != null && !time.equals("")){
+            AppConfig.setUserDefault(AppConfig.flag_volume_continue_time, Integer.parseInt(time));
+        }
+
         int volume = holder.settingNpVolume.getValue();
         AppConfig.setUserDefault(AppConfig.flag_volume_threshold, volume);
         String phone = holder.settingEtPhone.getText().toString();
