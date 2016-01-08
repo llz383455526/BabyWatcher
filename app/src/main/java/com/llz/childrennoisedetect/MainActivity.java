@@ -234,9 +234,21 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        volumeThreshold = AppConfig.getUserDefault(AppConfig.flag_volume_threshold, int.class);
-        volumeContinueTime = AppConfig.getUserDefault(AppConfig.flag_volume_continue_time, int.class);
-        phone = AppConfig.getUserDefault(AppConfig.flag_phone, String.class);
+
+        if((volumeThreshold = AppConfig.getUserDefault(AppConfig.flag_volume_threshold, int.class)) == -1)
+        {
+            volumeThreshold = 55;   //默认值 55db
+        }
+
+        if((volumeContinueTime = AppConfig.getUserDefault(AppConfig.flag_volume_continue_time, int.class)) == -1)
+        {
+            volumeContinueTime = 2; //默认2s
+        }
+
+        if((phone = AppConfig.getUserDefault(AppConfig.flag_phone, String.class)) == null)
+        {
+            phone = "13356539463" ;
+        }
 
         Log.d("llz", "shold=" + volumeThreshold + ":time=" + volumeContinueTime);
 

@@ -7,7 +7,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.llz.childrennoisedetect.config.AppConfig;
 import com.llz.childrennoisedetect.widgets.YSBNavigationBar;
@@ -34,9 +33,20 @@ public class MySettingsActivity extends Activity {
 
         //读sp
         holder = new ViewHolder(this);
-        volumeThreshold = AppConfig.getUserDefault(AppConfig.flag_volume_threshold, int.class);
-        volumeContinueTime = AppConfig.getUserDefault(AppConfig.flag_volume_continue_time, int.class);
-        phone = AppConfig.getUserDefault(AppConfig.flag_phone, String.class);
+        if((volumeThreshold = AppConfig.getUserDefault(AppConfig.flag_volume_threshold, int.class)) == -1)
+        {
+            volumeThreshold = 55;   //默认值 55db
+        }
+
+        if((volumeContinueTime = AppConfig.getUserDefault(AppConfig.flag_volume_continue_time, int.class)) == -1)
+        {
+            volumeContinueTime = 2; //默认2s
+        }
+
+        if((phone = AppConfig.getUserDefault(AppConfig.flag_phone, String.class)) == null)
+        {
+            phone = "13356539463" ;
+        }
 
 
         holder.settingNpVolume.setMinValue(40);
@@ -59,22 +69,15 @@ public class MySettingsActivity extends Activity {
                 MySettingsActivity.this.finish();
             }
         });
+        holder.nav.enableRightTextView("保存", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MySettingsActivity.this.finish();
+            }
+        });
         /**
          * 音量阈值调节
          */
-        holder.settingBtnPlus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (volumeThreshold > 90) {
-                    Toast.makeText(MySettingsActivity.this, "音量检测阈值不要高于90db", Toast.LENGTH_SHORT).show();
-                } else {
-                    volumeThreshold++;
-                    holder.settingEtVolume.setText(volumeThreshold + "");
-                    AppConfig.setUserDefault(AppConfig.flag_volume_threshold, volumeThreshold);
-                }
-
-            }
-        });
 
         holder.settingNpVolume.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
@@ -83,28 +86,9 @@ public class MySettingsActivity extends Activity {
             }
         });
 
-        holder.settingBtnDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (volumeThreshold > 10) {
-                    volumeThreshold--;
-                    holder.settingEtVolume.setText(volumeThreshold + "");
-                    AppConfig.setUserDefault(AppConfig.flag_volume_threshold, volumeThreshold);
-                } else {
-                    Toast.makeText(MySettingsActivity.this, "音量检测阈值不要低于10db", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        holder.settingEtVolume.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
 
 
+        holder.settingEtTime.setSelection(holder.settingEtTime.getText().toString().length());
 
     }
 
@@ -120,6 +104,12 @@ public class MySettingsActivity extends Activity {
 
         //退出设置时，将设置内容存入sp
 
+        saveSetting();
+
+
+    }
+
+    private void saveSetting() {
         String time = holder.settingEtTime.getText().toString();
         if(time != null && !time.equals("")){
             AppConfig.setUserDefault(AppConfig.flag_volume_continue_time, Integer.parseInt(time));
@@ -129,8 +119,6 @@ public class MySettingsActivity extends Activity {
         AppConfig.setUserDefault(AppConfig.flag_volume_threshold, volume);
         String phone = holder.settingEtPhone.getText().toString();
         AppConfig.setUserDefault(AppConfig.flag_phone, phone);
-
-
     }
 
     @Override

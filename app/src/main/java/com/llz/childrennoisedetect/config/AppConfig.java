@@ -56,15 +56,9 @@ public class AppConfig {
 
 
         initScreenSize();
-        initDefault();
 
     }
 
-    private static void initDefault() {
-        AppConfig.setUserDefault(flag_volume_threshold, 55);   //默认音量阈值 55db
-        AppConfig.setUserDefault(flag_volume_continue_time, 2);   //默认噪音持续时间 2s
-        AppConfig.setUserDefault(flag_phone, "18933948952");   //默认通知手机
-    }
     public static boolean isExitsSdCard() {
         if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED))
             return true;
