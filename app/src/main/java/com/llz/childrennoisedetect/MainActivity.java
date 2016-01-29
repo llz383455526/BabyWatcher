@@ -10,8 +10,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
     private int volumeThreshold;
     private int volumeContinueTime;
     private String phone;
+    private ImageButton btnOp;
+    private boolean btnOpState = false; //默认关闭
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,25 +80,55 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         navigationBar.setTitle(getResources().getString(R.string.app_name));
-        btnStart.setOnClickListener(new View.OnClickListener() {
+
+
+//        btnStart.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startAudio();
+//            }
+//        });
+//
+//        btnStop.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                stopAudio();
+//            }
+//        });
+
+        btnOp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startAudio();
+                if(btnOpState){
+                    startAudio();
+                }else {
+                    stopAudio();
+                }
             }
         });
 
-        btnStop.setOnClickListener(new View.OnClickListener() {
+        btnOp.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
-                stopAudio();
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction())
+                {
+                    case MotionEvent.ACTION_DOWN:
+                        btnOp.setImageDrawable(getResources().getDrawable(R.mipmap.hover));
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        btnOpState = !btnOpState;
+                        break;
+                }
+                return false;
             }
         });
     }
 
     private void initviews() {
         navigationBar = (YSBNavigationBar) findViewById(R.id.nav);
-        btnStart = (Button) findViewById(R.id.btn_start);
-        btnStop = (Button) findViewById(R.id.btn_stop);
+        btnOp = (ImageButton) findViewById(R.id.btn_op);
+//        btnStart = (Button) findViewById(R.id.btn_start);
+//        btnStop = (Button) findViewById(R.id.btn_stop);
         tvVolume = (TextView) findViewById(R.id.tv_volume);
 
         setViews();
@@ -104,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
     开始录音
      */
     private void startAudio() {
+        btnOp.setImageDrawable(getResources().getDrawable(R.mipmap.active));
         NoiseCount = 0;
 
         //已经在录音，什么也不做
@@ -125,6 +160,7 @@ public class MainActivity extends AppCompatActivity {
      * 停止录音
      */
     private void stopAudio() {
+        btnOp.setImageDrawable(getResources().getDrawable(R.mipmap.normal));
         if (audioRecord.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING) {
             audioRecord.stop(); //RECORDSTATE_STOPPED
             isRecording = false;
@@ -165,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
                             Uri uri = Uri.parse("tel:" + activity.phone);
                             Intent call = new Intent(Intent.ACTION_CALL, uri); //直接播出电话
                             try {
-                                activity.startActivity(call);
+                                activity.startActivityForResult(call, 101);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -193,6 +229,17 @@ public class MainActivity extends AppCompatActivity {
             }
 
 
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode)
+        {
+            case 101:
+                Toast.makeText(MainActivity.this, "resultcode:"+resultCode, Toast.LENGTH_SHORT).show();
+                break;
         }
     }
 

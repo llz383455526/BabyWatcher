@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">宝贝监护</string>
     <string name="title_activity_settings">Settings</string>
-    <string name="home_start_desc">1、点击“开始录音”，软件将开始监测宝贝所在房间的声场变化，当声场变化满足您设置的条件时，手机将自动拨打您设置的通知电话。</string>
-    <string name="home_stop_desc">2、点击“结束录音”，软件将停止工作，不再记录任何信息。</string>
+    <string name="home_start_desc">1、点击播放按钮，软件将开始监测宝贝所在房间的声场变化，当声场变化满足您设置的条件时，手机将自动拨打您设置的通知电话。</string>
+    <string name="home_stop_desc">2、再次点击播放按钮，软件将停止工作，不再记录任何信息。</string>
     <string name="home_setting_desc">3、点击“设置”，进入设置界面，在设置界面中，您可以：定制哭声持续时间（当宝宝哭声持续达到该值时会自动拨打设置的电话）；\n定制需要通知的手机（固定电话也行，但如果是异地电话可能需要填写区号）；\n设定声音响应阈值（只有当房间声音分贝超过该阈值时，软件才会真正进入工作状态）。</string>
     <!-- Strings related to Settings -->
 
