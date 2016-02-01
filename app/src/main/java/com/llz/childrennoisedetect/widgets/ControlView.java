@@ -74,11 +74,7 @@ public class ControlView extends LinearLayout
             tvOpState.setText(getResources().getString(R.string.controlviewstate_working));
         }else {
             btnOp.setImageDrawable(getResources().getDrawable(R.mipmap.normal));
-<<<<<<< HEAD
-            tvOpState.setText(getResources().getString(R.string.controlviewstate_ready));
-=======
             tvOpState.setText(getResources().getString(R.string.controlviewstate_working));
->>>>>>> c32afdf53b0ebad25411e87be5c3a7397cde26a9
         }
     }
 }
