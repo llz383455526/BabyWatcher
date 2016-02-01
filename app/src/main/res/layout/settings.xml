@@ -17,7 +17,11 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:paddingLeft="5dp"
+<<<<<<< HEAD
         android:background="@android:color/white"
+=======
+        android:background="@color/BG2"
+>>>>>>> c32afdf53b0ebad25411e87be5c3a7397cde26a9
         >
         <TextView
             android:id="@+id/setting_tv_time_title"
