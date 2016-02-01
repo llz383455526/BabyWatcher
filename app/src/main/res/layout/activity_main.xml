@@ -22,17 +22,13 @@
         android:gravity="center"
         android:background="@android:color/white"
         >
-        <ImageButton
-            android:id="@+id/btn_op"
+        <com.llz.childrennoisedetect.widgets.ControlView
+            android:id="@+id/cv_btnOp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="15dp"
-            android:src="@mipmap/normal"
-            android:scaleType="fitXY"
-            android:background="@android:color/white"
-            android:layout_gravity="center"
+            >
 
-            />
+        </com.llz.childrennoisedetect.widgets.ControlView>
 
         <TextView
             android:id="@+id/tv_volume"

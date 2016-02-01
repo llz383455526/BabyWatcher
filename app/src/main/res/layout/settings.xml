@@ -3,6 +3,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/BG2"
     >
 
     <com.llz.childrennoisedetect.widgets.YSBNavigationBar
@@ -11,66 +12,12 @@
         android:layout_height="wrap_content">
 
     </com.llz.childrennoisedetect.widgets.YSBNavigationBar>
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:paddingLeft="5dp"
-        android:visibility="gone"
-        >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="调节声音响应阈值"
-            android:gravity="center_vertical"
-            android:textSize="18sp"
-            />
-        <Button
-            android:id="@+id/setting_btn_plus"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:layout_marginRight="10dp"
-            android:background="@mipmap/plus_24"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:visibility="gone"
-            />
-        <EditText
-            android:id="@+id/setting_et_volume"
-            android:layout_width="60dp"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="55.0"
-            android:gravity="center"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/setting_btn_plus"
-            android:inputType="numberDecimal"
-            android:background="@null"
-            android:visibility="gone"
-            />
-        <Button
-            android:id="@+id/setting_btn_delete"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:background="@mipmap/sign_delete_24"
-            android:layout_toLeftOf="@id/setting_et_volume"
-            android:layout_centerVertical="true"
-            android:visibility="gone"
-            />
-        <NumberPicker
 
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:showDividers="beginning"
-            android:background="@null"
-
-            ></NumberPicker>
-    </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:paddingLeft="5dp"
-        android:background="@color/BG2"
+        android:background="@android:color/white"
         >
         <TextView
             android:id="@+id/setting_tv_time_title"
@@ -101,7 +48,7 @@
         android:layout_height="48dp"
         android:layout_marginTop="5dp"
         android:paddingLeft="5dp"
-        android:background="@color/BG2"
+        android:background="@android:color/white"
         >
         <TextView
             android:id="@+id/setting_tv_phone_title"
@@ -114,17 +61,52 @@
             />
         <EditText
             android:id="@+id/setting_et_phone"
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:padding="5dp"
             android:gravity="center"
-            android:text="18933948952"
+            android:textSize="18sp"
+            android:layout_marginRight="10dp"
+            android:background="@null"
+            android:inputType="phone"
+            android:text=""
+            android:hint="请输入手机号"
+            />
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/rl_volume"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="5dp"
+        android:paddingLeft="5dp"
+        android:background="@android:color/white"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="定制音量阈值"
+            android:gravity="center"
+            android:layout_centerVertical="true"
+            android:textSize="18sp"
+            />
+        <TextView
+            android:id="@+id/setting_tv_volume"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:clickable="true"
+            android:padding="5dp"
+            android:gravity="center"
+            android:text=""
+            android:hint="点击设置"
             android:textSize="18sp"
             android:layout_marginRight="10dp"
             android:background="@null"
             />
+
     </RelativeLayout>
 
     <RelativeLayout
@@ -132,23 +114,14 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:paddingLeft="5dp"
-        android:background="@color/BG2"
+        android:background="@android:color/white"
         >
-        <TextView
-            android:id="@+id/setting_tv_volume_adjust_title"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:text="拨动滚轮调节声音阈值"
-            android:gravity="center_vertical"
-            android:layout_centerHorizontal="true"
-            android:textSize="18sp"
-            />
         <NumberPicker
             android:id="@+id/setting_np_volume"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:layout_below="@id/setting_tv_volume_adjust_title"
             android:layout_centerHorizontal="true"
+            android:visibility="gone"
             ></NumberPicker>
     </RelativeLayout>
 </LinearLayout>

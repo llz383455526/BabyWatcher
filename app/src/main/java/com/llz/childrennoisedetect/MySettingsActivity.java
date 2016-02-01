@@ -2,11 +2,13 @@ package com.llz.childrennoisedetect;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.NumberPicker;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.llz.childrennoisedetect.config.AppConfig;
 import com.llz.childrennoisedetect.widgets.YSBNavigationBar;
@@ -43,9 +45,10 @@ public class MySettingsActivity extends Activity {
             volumeContinueTime = 2; //默认2s
         }
 
-        if((phone = AppConfig.getUserDefault(AppConfig.flag_phone, String.class)) == null)
+        phone = AppConfig.getUserDefault(AppConfig.flag_phone, String.class);
+        if(!TextUtils.isEmpty(phone))
         {
-            phone = "13356539463" ;
+            holder.settingEtPhone.setText(phone);
         }
 
 
@@ -53,11 +56,10 @@ public class MySettingsActivity extends Activity {
         holder.settingNpVolume.setMaxValue(75);
         holder.settingNpVolume.setWrapSelectorWheel(false);
         holder.settingNpVolume.setValue(volumeThreshold);
-        holder.settingTvVolumeAdjustTitle.setText("拨动滚轮调节声音响应阈值 "+volumeThreshold+" dB");
+        holder.settingTvVolume.setText(volumeThreshold + "");
 
         holder.settingEtTime.setText(volumeContinueTime + "");
-//        holder.settingEtVolume.setText(volumeThreshold + "");
-        holder.settingEtPhone.setText(phone);
+
         setViews();
     }
 
@@ -69,23 +71,29 @@ public class MySettingsActivity extends Activity {
                 MySettingsActivity.this.finish();
             }
         });
-        holder.nav.enableRightTextView("保存", new View.OnClickListener() {
+        holder.nav.enableRightTextView("保存设置", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MySettingsActivity.this.finish();
+                //退出设置时，将设置内容存入sp
+                saveSetting();
             }
         });
         /**
          * 音量阈值调节
          */
 
+        holder.settingTvVolume.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                holder.settingNpVolume.setVisibility(View.VISIBLE);
+            }
+        });
         holder.settingNpVolume.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                holder.settingTvVolumeAdjustTitle.setText("拨动滚轮调节声音响应阈值 ("+newVal+" dB)");
+                holder.settingTvVolume.setText(newVal+"");
             }
         });
-
 
 
         holder.settingEtTime.setSelection(holder.settingEtTime.getText().toString().length());
@@ -97,28 +105,36 @@ public class MySettingsActivity extends Activity {
         super.onResume();
     }
 
+
     @Override
-    protected void onPause() {
-        super.onPause();
-
-
-        //退出设置时，将设置内容存入sp
-
+    public void onBackPressed() {
+//        super.onBackPressed();
         saveSetting();
-
-
     }
 
     private void saveSetting() {
         String time = holder.settingEtTime.getText().toString();
-        if(time != null && !time.equals("")){
+        if(!TextUtils.isEmpty(time)){
             AppConfig.setUserDefault(AppConfig.flag_volume_continue_time, Integer.parseInt(time));
+        }else {
+            Toast.makeText(MySettingsActivity.this, "哭声持续时间不能为空", Toast.LENGTH_LONG).show();
+            return;
         }
 
         int volume = holder.settingNpVolume.getValue();
         AppConfig.setUserDefault(AppConfig.flag_volume_threshold, volume);
+
         String phone = holder.settingEtPhone.getText().toString();
-        AppConfig.setUserDefault(AppConfig.flag_phone, phone);
+        if(!TextUtils.isEmpty(phone))
+        {
+            AppConfig.setUserDefault(AppConfig.flag_phone, phone);
+        }else {
+            Toast.makeText(MySettingsActivity.this, "要通知的手机不能为空", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        MySettingsActivity.this.finish();
+        Toast.makeText(MySettingsActivity.this, "设置已保存", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -135,14 +151,6 @@ public class MySettingsActivity extends Activity {
     static class ViewHolder {
         @Bind(R.id.nav)
         YSBNavigationBar nav;
-        @Bind(R.id.setting_tv_volume_adjust_title)
-        TextView settingTvVolumeAdjustTitle;
-        @Bind(R.id.setting_btn_plus)
-        Button settingBtnPlus;
-        @Bind(R.id.setting_et_volume)
-        EditText settingEtVolume;
-        @Bind(R.id.setting_btn_delete)
-        Button settingBtnDelete;
         @Bind(R.id.setting_tv_time_title)
         TextView settingTvTimeTitle;
         @Bind(R.id.setting_et_time)
@@ -153,6 +161,10 @@ public class MySettingsActivity extends Activity {
         EditText settingEtPhone;
         @Bind(R.id.setting_np_volume)
         NumberPicker settingNpVolume;
+        @Bind(R.id.setting_tv_volume)
+        TextView settingTvVolume;
+        @Bind(R.id.rl_volume)
+        RelativeLayout rlVolume;
 
         ViewHolder(Activity view) {
             ButterKnife.bind(this, view);
