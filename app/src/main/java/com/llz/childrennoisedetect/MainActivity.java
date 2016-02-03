@@ -127,8 +127,6 @@ public class MainActivity extends AppCompatActivity {
         isRecording = true;
         audioRecordThread = new AudioRecordThread();
         audioRecordThread.start();
-
-
     }
 
     private void postDialog() {

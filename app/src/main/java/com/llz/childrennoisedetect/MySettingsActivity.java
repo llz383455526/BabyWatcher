@@ -1,7 +1,9 @@
 package com.llz.childrennoisedetect;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -11,7 +13,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.llz.childrennoisedetect.config.AppConfig;
+import com.llz.childrennoisedetect.widgets.CustomAudioRecord;
 import com.llz.childrennoisedetect.widgets.YSBNavigationBar;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -85,19 +92,76 @@ public class MySettingsActivity extends Activity {
         holder.settingTvVolume.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /**
+                 * 先进行一次自动检测，给用户建议
+                 */
+                postAutoDetectDialog();
                 holder.settingNpVolume.setVisibility(View.VISIBLE);
             }
         });
         holder.settingNpVolume.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                holder.settingTvVolume.setText(newVal+"");
+                holder.settingTvVolume.setText(newVal + "");
             }
         });
 
 
         holder.settingEtTime.setSelection(holder.settingEtTime.getText().toString().length());
 
+    }
+
+    private void postAutoDetectDialog() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("系统即将开始为您自动检测房间声场状态。");
+        AlertDialog dialog = builder.create();
+        dialog.setContentView(R.layout.auto_detect_dialog_view);
+        dialog.setButton(DialogInterface.
+                BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                final CustomAudioRecord customAudioRecord = new CustomAudioRecord(MySettingsActivity.this);
+                try {
+                    customAudioRecord.startAudio(new CustomAudioRecord.onVolumeChangeListener() {
+
+                        public int count; //自动检测5s，也就是50次
+                        public ArrayList<Integer> list = new ArrayList<Integer>();
+
+                        @Override
+                        public void onVolumeChange(float volume) {
+                            list.add((int) volume);
+                            count++;
+
+                            if(count==50){
+                                customAudioRecord.stopAudio();
+                                postSuggestionDialog(list);
+                            }
+
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+        dialog.show();
+    }
+
+    private void postSuggestionDialog(ArrayList list) {
+        Collections.sort(list, new Comparator<Integer>() {
+            @Override
+            public int compare(Integer lhs, Integer rhs) {
+                return lhs-rhs;
+            }
+        });
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("系统检测到你房间的音量范围是["+list.get(0)+","+list.get(list.size()-1)+"]。");
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     @Override

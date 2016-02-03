@@ -121,7 +121,21 @@
             android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:visibility="gone"
+            android:visibility="invisible"
             ></NumberPicker>
     </RelativeLayout>
+    <LinearLayout
+        android:id="@+id/ll_about"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="6dp"
+            android:text="项目托管地址：https://github.com/llz383455526/BabyWatcher.git"
+            />
+    </LinearLayout>
 </LinearLayout>
