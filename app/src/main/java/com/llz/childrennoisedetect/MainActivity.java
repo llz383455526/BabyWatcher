@@ -1,5 +1,6 @@
 package com.llz.childrennoisedetect;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
@@ -8,22 +9,22 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.llz.childrennoisedetect.config.AppConfig;
+import com.llz.childrennoisedetect.widgets.ControlView;
 import com.llz.childrennoisedetect.widgets.YSBNavigationBar;
 
 import java.lang.ref.WeakReference;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button btnStart;
-    private Button btnStop;
     private AudioRecord audioRecord;
     private static final int sampleRateInHz = 44100;
     private static final int RECORDER_CHANNELS = AudioFormat.CHANNEL_IN_MONO;
@@ -36,11 +37,12 @@ public class MainActivity extends AppCompatActivity {
     private AudioRecordHandler audioRecordHandler;
     private TextView tvVolume;
 
-    private int NoiseCount = 0; //分贝超过阈值的次数，20次，也就是2s
+    private int noiseCount = 0; //分贝超过阈值的次数，20次，也就是2s
     private YSBNavigationBar navigationBar;
     private int volumeThreshold;
     private int volumeContinueTime;
     private String phone;
+    private ControlView cvBtnOp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
 
         initviews();
 
+
+
     }
 
     private void setViews() {
@@ -76,25 +80,24 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         navigationBar.setTitle(getResources().getString(R.string.app_name));
-        btnStart.setOnClickListener(new View.OnClickListener() {
+
+
+        cvBtnOp.setBtnOpClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startAudio();
+                if (cvBtnOp.getBtnOpState()) {
+                    startAudio();
+                } else {
+                    stopAudio();
+                }
             }
         });
 
-        btnStop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                stopAudio();
-            }
-        });
     }
 
     private void initviews() {
         navigationBar = (YSBNavigationBar) findViewById(R.id.nav);
-        btnStart = (Button) findViewById(R.id.btn_start);
-        btnStop = (Button) findViewById(R.id.btn_stop);
+        cvBtnOp = (ControlView) findViewById(R.id.cv_btnOp);
         tvVolume = (TextView) findViewById(R.id.tv_volume);
 
         setViews();
@@ -104,7 +107,14 @@ public class MainActivity extends AppCompatActivity {
     开始录音
      */
     private void startAudio() {
-        NoiseCount = 0;
+        if(TextUtils.isEmpty(phone))
+        {
+            cvBtnOp.setBtnOpState(false);
+            postDialog();
+            return;
+        }
+
+        noiseCount = 0;
 
         //已经在录音，什么也不做
         if(audioRecord.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING)
@@ -121,10 +131,31 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void postDialog() {
+       AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("为了便于您更好地使用该软件，请到设置界面设置要通知的手机,并检查其它设置项是否正确。");
+        AlertDialog dialog = builder.create();
+        dialog.setButton(DialogInterface.
+                BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if(TextUtils.isEmpty(phone))
+                {
+                    cvBtnOp.setBtnOpState(false);
+                    Intent intent = new Intent(MainActivity.this, MySettingsActivity.class);
+                    MainActivity.this.startActivity(intent);
+                }
+            }
+        });
+
+        dialog.show();
+    }
+
     /**
      * 停止录音
      */
     private void stopAudio() {
+        noiseCount = 0;
         if (audioRecord.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING) {
             audioRecord.stop(); //RECORDSTATE_STOPPED
             isRecording = false;
@@ -152,15 +183,18 @@ public class MainActivity extends AppCompatActivity {
                 case 1:
                     float volume = Float.parseFloat(msg.obj.toString());
                     activity.tvVolume.setText(volume + "");
-                    Log.d("MainActivity", "分贝值:" + volume + "noiseCount=" + activity.NoiseCount + "阈值=" + activity.volumeThreshold);
+                    Log.d("MainActivity", "分贝值:" + volume + "noiseCount=" + activity.noiseCount + "阈值=" + activity.volumeThreshold);
+                    if(volume==Float.NEGATIVE_INFINITY){
+                        activity.tvVolume.setText("无法获取环境音量，请在设置中为'宝贝监护'应用打开录音权限");
+                        activity.stopAudio();
+                        return;
+                    }
                     if (((int) volume) > activity.volumeThreshold) {
-                        activity.NoiseCount++;
+                        activity.noiseCount++;
                         //哭声持续超过2s
-                        if (activity.NoiseCount >= activity.volumeContinueTime * 10) {
+                        if (activity.noiseCount >= activity.volumeContinueTime * 10) {
 
                             activity.stopAudio();
-                            activity.NoiseCount = 0;
-
                             //直接拨打电话
                             Uri uri = Uri.parse("tel:" + activity.phone);
                             Intent call = new Intent(Intent.ACTION_CALL, uri); //直接播出电话
@@ -189,12 +223,13 @@ public class MainActivity extends AppCompatActivity {
 
                     break;
                 default:
-                    Toast.makeText(weakContext.get(), "error", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(weakContext.get(), "工作异常，请检查权限", Toast.LENGTH_SHORT).show();
             }
 
 
         }
     }
+
 
     private class AudioRecordThread extends Thread {
         @Override
@@ -245,10 +280,8 @@ public class MainActivity extends AppCompatActivity {
             volumeContinueTime = 2; //默认2s
         }
 
-        if((phone = AppConfig.getUserDefault(AppConfig.flag_phone, String.class)) == null)
-        {
-            phone = "13356539463" ;
-        }
+        phone = AppConfig.getUserDefault(AppConfig.flag_phone, String.class);
+
 
         Log.d("llz", "shold=" + volumeThreshold + ":time=" + volumeContinueTime);
 

@@ -52,7 +52,7 @@ public class AppConfig {
     public static void init() {
 
         context = MyApplication.getInstance();
-        userInfo = context.getSharedPreferences("app_config", 0);
+        userInfo = context.getSharedPreferences("app_config", Context.MODE_PRIVATE);
 
 
         initScreenSize();
