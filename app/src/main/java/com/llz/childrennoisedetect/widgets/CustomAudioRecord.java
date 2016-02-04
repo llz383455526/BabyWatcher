@@ -84,6 +84,7 @@ public class CustomAudioRecord {
      */
     public void stopAudio() {
 
+        audioRecordHandler.removeCallbacks(null);
         if (audioRecord.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING) {
             audioRecord.stop(); //RECORDSTATE_STOPPED
             isRecording = false;
