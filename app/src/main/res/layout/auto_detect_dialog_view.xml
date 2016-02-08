@@ -4,14 +4,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <TextView
+        android:id="@+id/tv_detect_result"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="检测提示"
+        android:padding="5dp"
+        android:hint="检测结果"
+        android:textColor="@color/T1"
+        android:gravity="center"
         />
     <ProgressBar
         android:id="@+id/progressbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        />
     <RelativeLayout
         android:id="@+id/rl_result"
         android:layout_width="match_parent"
@@ -23,20 +30,35 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:weightSum="2"
+        android:orientation="horizontal"
         >
+        <Button
+            android:id="@+id/btn_to_set"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:layout_weight="1"
+            android:textColor="@color/T2"
+            android:text="这就去设置"
+            android:visibility="gone"
+            />
         <Button
             android:id="@+id/btn_cancel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="自己选择"
+            android:padding="5dp"
+            android:text="取消"
+            android:textColor="@color/T2"
             android:layout_weight="1"
             />
         <Button
-            android:id="@+id/btn_ok"
+            android:id="@+id/btn_start_detect"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="5dp"
             android:layout_weight="1"
-            android:text="确定"
+            android:textColor="@color/T2"
+            android:text="开始检测"
             />
     </LinearLayout>
 

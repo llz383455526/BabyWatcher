@@ -3,7 +3,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="@dimen/navigationBar_height"
-    android:background="@color/BG4"
+    android:background="#79B9F7"
     android:orientation="horizontal"
     android:gravity="center_vertical">
     <!--  左 -->

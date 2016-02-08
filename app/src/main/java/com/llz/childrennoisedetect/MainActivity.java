@@ -157,17 +157,20 @@ public class MainActivity extends AppCompatActivity {
         if (audioRecord.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING) {
             audioRecord.stop(); //RECORDSTATE_STOPPED
             isRecording = false;
+            cvBtnOp.setBtnOpState(false);
         }
 
     }
 
     private class AudioRecordHandler extends Handler {
         private WeakReference<MainActivity> weakContext;
+        private boolean flag_Begin_count = false;
+        private int volume_count;
 
 
         AudioRecordHandler(MainActivity activity) {
             weakContext = new WeakReference<>(activity);
-        }
+    }
 
         @Override
         public void handleMessage(Message msg) {
@@ -187,11 +190,22 @@ public class MainActivity extends AppCompatActivity {
                         activity.stopAudio();
                         return;
                     }
-                    if (((int) volume) > activity.volumeThreshold) {
-                        activity.noiseCount++;
-                        //哭声持续超过2s
-                        if (activity.noiseCount >= activity.volumeContinueTime * 10) {
 
+                    if(flag_Begin_count){
+                        volume_count++;
+                    }
+                    if (((int) volume) > activity.volumeThreshold) {                                //音量超过阈值开始计数
+                        flag_Begin_count = true;
+                        activity.noiseCount++;
+
+                        if(volume_count==0){
+                            volume_count++;
+                        }
+                        //哭声次数超过activity.volumeContinueTime * 10 *0.8次且
+                        if (activity.noiseCount >= activity.volumeContinueTime * 10 * 0.8 && volume_count<=activity.volumeContinueTime * 10) {
+
+                            flag_Begin_count = false;
+                            volume_count = 0;
                             activity.stopAudio();
                             //直接拨打电话
                             Uri uri = Uri.parse("tel:" + activity.phone);
@@ -216,6 +230,12 @@ public class MainActivity extends AppCompatActivity {
                             //网络音视频电话
 
 
+                        }
+                    }else {
+                        if(volume_count>=activity.volumeContinueTime * 10){ //volumeContinueTime计时结束,没达到条件要重置条件
+                            activity.noiseCount = 0;
+                            flag_Begin_count = false;
+                            volume_count = 0;
                         }
                     }
 

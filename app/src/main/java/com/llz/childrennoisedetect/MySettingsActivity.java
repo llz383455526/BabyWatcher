@@ -5,9 +5,12 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.NumberPicker;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,6 +35,9 @@ public class MySettingsActivity extends Activity {
     private int volumeThreshold = 0;
     private int volumeContinueTime = 0;
     private String phone;
+    private AlertDialog.Builder builder;
+    private Integer currentVolumeMax;
+    private AlertDialog detectDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +65,7 @@ public class MySettingsActivity extends Activity {
         }
 
 
-        holder.settingNpVolume.setMinValue(40);
+        holder.settingNpVolume.setMinValue(20);
         holder.settingNpVolume.setMaxValue(75);
         holder.settingNpVolume.setWrapSelectorWheel(false);
         holder.settingNpVolume.setValue(volumeThreshold);
@@ -113,15 +119,25 @@ public class MySettingsActivity extends Activity {
 
     private void postAutoDetectDialog() {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("系统即将开始为您自动检测房间声场状态。");
-        AlertDialog dialog = builder.create();
-        dialog.setContentView(R.layout.auto_detect_dialog_view);
-        dialog.setButton(DialogInterface.
-                BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
+        View view = LayoutInflater.from(MySettingsActivity.this).inflate(R.layout.auto_detect_dialog_view,null);
+        builder = new AlertDialog.Builder(this);
+        builder.setView(view);
+        builder.setCancelable(false);
 
+        //init view
+        Button btnStartDetect = (Button) view.findViewById(R.id.btn_start_detect);
+        final Button btnCancel = (Button) view.findViewById(R.id.btn_cancel);
+        final Button btnToSet = (Button) view.findViewById(R.id.btn_to_set);
+        final ProgressBar pb = (ProgressBar) view.findViewById(R.id.progressbar);
+        final TextView tvDetectResult = (TextView) view.findViewById(R.id.tv_detect_result);
+
+        pb.setMax(50);
+
+        //set view
+        tvDetectResult.setText("点击按钮开始可以对房间声场状态进行自动检测，持续5秒。如果不需要自动检测，点击取消按钮。");
+        btnStartDetect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
                 final CustomAudioRecord customAudioRecord = new CustomAudioRecord(MySettingsActivity.this);
                 try {
                     customAudioRecord.startAudio(new CustomAudioRecord.onVolumeChangeListener() {
@@ -133,10 +149,26 @@ public class MySettingsActivity extends Activity {
                         public void onVolumeChange(float volume) {
                             list.add((int) volume);
                             count++;
-
-                            if(count==50){
+                            pb.setProgress(count);
+                            if (count == 50) {
                                 customAudioRecord.stopAudio();
-                                postSuggestionDialog(list);
+
+                                Collections.sort(list, new Comparator<Integer>() {
+                                    @Override
+                                    public int compare(Integer lhs, Integer rhs) {
+                                        return lhs - rhs;
+                                    }
+                                });
+
+                                currentVolumeMax = list.get(list.size() - 1);
+                                pb.setVisibility(View.INVISIBLE);
+                                ((Button) v).setVisibility(View.GONE);
+                                btnCancel.setVisibility(View.GONE);
+                                btnToSet.setVisibility(View.VISIBLE);
+                                String str = "系统检测到你房间的音量范围是[" + list.get(0) + "," + currentVolumeMax + "]," + "建议您设置的音量阈值大于" + currentVolumeMax + "。";
+                                tvDetectResult.setVisibility(View.VISIBLE);
+                                tvDetectResult.setText(str);
+
                             }
 
                         }
@@ -144,24 +176,40 @@ public class MySettingsActivity extends Activity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
         });
-        dialog.show();
+
+        btnToSet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                holder.settingTvVolume.setText(currentVolumeMax + "");
+                holder.settingNpVolume.setValue(currentVolumeMax);
+                detectDialog.dismiss();
+            }
+        });
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                detectDialog.dismiss();
+            }
+        });
+
+        detectDialog = builder.show();
     }
 
     private void postSuggestionDialog(ArrayList list) {
         Collections.sort(list, new Comparator<Integer>() {
             @Override
             public int compare(Integer lhs, Integer rhs) {
-                return lhs-rhs;
+                return lhs - rhs;
             }
         });
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("系统检测到你房间的音量范围是["+list.get(0)+","+list.get(list.size()-1)+"]。");
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        builder.setCancelable(false);
+        builder.show();
     }
 
     @Override
