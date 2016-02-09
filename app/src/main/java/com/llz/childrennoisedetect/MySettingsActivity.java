@@ -55,7 +55,7 @@ public class MySettingsActivity extends Activity {
 
         if((volumeContinueTime = AppConfig.getUserDefault(AppConfig.flag_volume_continue_time, int.class)) == -1)
         {
-            volumeContinueTime = 2; //默认2s
+            volumeContinueTime = 3; //默认2s
         }
 
         phone = AppConfig.getUserDefault(AppConfig.flag_phone, String.class);
@@ -134,7 +134,7 @@ public class MySettingsActivity extends Activity {
         pb.setMax(50);
 
         //set view
-        tvDetectResult.setText("点击按钮开始可以对房间声场状态进行自动检测，持续5秒。如果不需要自动检测，点击取消按钮。");
+        tvDetectResult.setText("点击\"开始检测\"可以对房间声场状态进行自动检测，持续5秒。如果不需要自动检测，点击\"取消\"。");
         btnStartDetect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
@@ -165,7 +165,7 @@ public class MySettingsActivity extends Activity {
                                 ((Button) v).setVisibility(View.GONE);
                                 btnCancel.setVisibility(View.GONE);
                                 btnToSet.setVisibility(View.VISIBLE);
-                                String str = "系统检测到你房间的音量范围是[" + list.get(0) + "," + currentVolumeMax + "]," + "建议您设置的音量阈值大于" + currentVolumeMax + "。";
+                                String str = "系统检测到你房间的音量范围是[" + list.get(0) + "," + currentVolumeMax + "] dB," + "建议您设置的音量阈值大于" + currentVolumeMax + "。";
                                 tvDetectResult.setVisibility(View.VISIBLE);
                                 tvDetectResult.setText(str);
 

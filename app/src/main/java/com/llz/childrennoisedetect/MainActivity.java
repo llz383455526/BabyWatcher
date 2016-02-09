@@ -202,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
                             volume_count++;
                         }
                         //哭声次数超过activity.volumeContinueTime * 10 *0.8次且
-                        if (activity.noiseCount >= activity.volumeContinueTime * 10 * 0.8 && volume_count<=activity.volumeContinueTime * 10) {
+                        if (activity.noiseCount >= activity.volumeContinueTime * 10 * 0.6 && volume_count<=activity.volumeContinueTime * 10) {
 
                             flag_Begin_count = false;
                             volume_count = 0;

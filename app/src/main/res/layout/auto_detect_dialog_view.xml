@@ -10,7 +10,7 @@
         android:padding="5dp"
         android:hint="检测结果"
         android:textColor="@color/T1"
-        android:gravity="center"
+        android:textSize="18sp"
         />
     <ProgressBar
         android:id="@+id/progressbar"
