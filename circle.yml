@@ -1,0 +1,3 @@
+test:
+  pre:
+    - chmod +x gradlew
