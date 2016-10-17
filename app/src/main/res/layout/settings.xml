@@ -23,7 +23,7 @@
             android:id="@+id/setting_tv_time_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="定制哭声持续时间"
+            android:text="定制哭声持续时间(s)"
             android:gravity="center_vertical"
             android:layout_centerVertical="true"
             android:textSize="18sp"
